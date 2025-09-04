@@ -1,0 +1,17 @@
+create or replace view TABLEAU.TABLEAU_REST.VW_ALL_TAGS(
+	"Item_LUID",
+	"Tag_Label",
+	"Site_LUID",
+	"Item_Type",
+	"Admin_Insights_Published_At"
+) as 
+
+SELECT "Item_LUID", "Tag_Label", "Site_LUID", "Item_Type", MAX("Admin_Insights_Published_At") AS "Admin_Insights_Published_At"
+FROM (
+SELECT *, 'workbook' AS "Item_Type" FROM TABLEAU.TABLEAU_REST.TAGS_WORKBOOKS
+UNION
+SELECT *, 'datasource' AS "Item_Type" FROM TABLEAU.TABLEAU_REST.TAGS_DATASOURCES
+UNION 
+SELECT *, 'flow' AS "Item_Type" FROM TABLEAU.TABLEAU_REST.TAGS_FLOWS
+) A
+GROUP BY "Item_LUID", "Tag_Label", "Site_LUID", "Item_Type";
